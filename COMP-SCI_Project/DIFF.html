@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Graphing Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="STYLE.css">
+
+<script type="text/javascript" src="SCRIPT.js"></script>
+
+</head>
+<body>
+
+    <ul>
+        <li id="home"><a href="index.html">MAIN CALCULATOR</a></li>
+        <li><a href="MATH.html">2ND DEGREE</a></li>
+        <li class="dropdown">
+          <a href="DIFF.html" class="dropbtn">DIFFERENTIATION</a>
+          <li class="dropdown">
+              <a href="javascript:void(0)" class="dropbtn">INTEGRATION</a>
+              <li class="dropdown"></li>
+        </li>
+      </ul>
+
+    <h1>DIFFERENTIATION</h1>
+
+    <div class="flex-container123">
+        <!-- Input equation -->
+        <div><input type = "text" id = "equation1" value = ""></div> 
+        <div><input type = "number" id = "diff1" value = ""></div>
+        <!-- Draw function -->
+        <div><input type="button" value="draw" onclick="draw()"></div>
+        <!-- Clear functions -->
+        <div><input type="button" onClick= "clearcanvas1()" value="clear"/></div>
+     </div>
+     <pre></pre>
+     <div class="zoom_input">
+         <!-- Zoom input -->
+        <div><input type = "number" id = "zoom1" value = "10"></div>
+        <div><input type = "button" value = "Set Zoom" onclick = "draw()"></div>
+     </div>
+        <!-- Not useful to user -->
+
+    <canvas id="myCanvas" width="3000" height="3000" resize="true" style="border:5px solid #ff6666;"></canvas>canvas
+            <script>
+                  // MAIN FUNCTION OF LINE //
+                  let x = 0; // Variable used in loop as start point, needed later
+                  let n = 100; // End point
+                  for (x = -100; x < n; x += 0.001) { // "x" increases by 0.001 each iteration//
+                  function f(x) {
+                  let l = document.getElementById("equation1").value; // Takes the input function
+                  var pwr = l.replace("^" , "**"); // Replaces "^" with "**" to favor the language math
+                  pwr = pwr.replace("^" , "**");
+                  pwr = pwr.replace("^" , "**");
+                  pwr = pwr.replace("^" , "**");
+                  fun = pwr.replace("^" , "**"); // Reiterates 4 times for more complex equations
+                  let k = -(eval(fun)) // Transforms the string into usable input
+                  return k; // Returns a table of values for the function, from -100 to 100;
+                  }
+                  } //End
+
+                  let h = 0.0000001 // If you don't know what h is, then you might as well get out of this class
+                  for (x = -100; x < n; x += 0.001){
+                  function g(x){
+                  let m = +document.getElementById("diff1").value;
+                  let l = document.getElementById("equation1").value;
+                  var s = m+h;
+                  var pwr = l.replace("^", "**");
+                   pwr = pwr.replace("^", "**");
+                      pwr = pwr.replace("^", "**");
+                      pwr = pwr.replace("^", "**");
+                      pwr = pwr.replace("^", "**");
+                   var orig = eval(pwr.replace("x", "m"));
+                   var alt = eval(pwr.replace("x", "s"));
+                   var a = (alt-orig)/h;
+                   let b = orig - a * m;
+                   orig = "a * m + b";
+                   var fin = -(eval(orig.replace("m", "x")));
+                   return fin;
+                  }
+                }
+
+
+                  //Start of canvas
+            var w = document.getElementById("myCanvas");
+            var ctx = w.getContext("2d");
+
+
+            //SKELETON//
+            function draw(){
+            // Vertical line
+            ctx.beginPath();
+            ctx.moveTo(1500 , 0);
+            ctx.lineTo(1500 , 3000);
+            ctx.lineWidth = 2;
+            // Color
+            ctx.strokeStyle = 'white';
+            ctx.stroke();
+            // Horisontal lines
+            ctx.beginPath();
+            ctx.moveTo(0 , 1500);
+            ctx.lineTo(3000 , 1500);
+            ctx.lineWidth = 2;
+            // Color
+            ctx.strokeStyle = 'white';
+            ctx.stroke();
+            // Numbers on x-axis
+            for (let t = -1400; t < 1400; t += 1){ // Displays numbers from -1400px to 1400 on the canvas
+                if(t % 100 === 0){ // Only displays certain numbers for spacing
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "white";
+            ctx.textBaseline = "hanging";
+            ctx.fillText(t / (+document.getElementById("zoom1").value * 10), t + 1500, 1500); //Add 1500 to "t" to be at center
+                } // Takes input from second box on page and uses it to have the same proportions as function "f(x)"
+            }
+             // Numbers on y-axis
+            for (let t = -1400; t < 1400; t+=1){ // Displays numbers from -1400px to 1400 on the canvas
+                if(t % 100 === 0){ // Only displays certain numbers for spacing
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "white";
+            ctx.textBaseline = "hanging";
+            ctx.fillText(-(t/(+document.getElementById("zoom1").value*10)), 1500, t+1500); //Add 1500 to "t" to be at center
+                }// Takes input from second box on page and uses it to have the same proportions as function "f(x)"
+            }
+            
+
+            // LINE COLOR
+            function getRandomColor() {
+               var letters = '0123456789ABCDEF';
+               var color = '#';
+               for (var i = 0; i < 6; i++) {
+                     color += letters[Math.floor(Math.random() * 16)];
+                    }
+               return color;
+            } 
+            let color = getRandomColor(); // Variable used to give random color to each line
+
+                  // DOTS BASED ON CENTER OF GRAPH
+                  for (x = -100; x < n; x += 0.001) { // Loop draw a tiny line for each of the pints in the f(x) function
+                  ctx.beginPath();
+                  // Draws a first set of points at [x, f(x)] based on the zoom value and center of graph
+                  ctx.moveTo(x * (10 * (+document.getElementById("zoom1").value)) + 1500, f(x) * (10 * (+document.getElementById("zoom1").value)) + 1500);
+                  // Draws of second set of points 1px away from the other one and connects them, thus creating a line
+                  ctx.lineTo(x * (10 * (+document.getElementById("zoom1").value)) + 1501, f(x) * (10 * (+document.getElementById("zoom1").value)) + 1501)
+                  ctx.lineWidth = 3;
+                  ctx.strokeStyle = color; // From random color function
+                  ctx.stroke();
+                  }
+                // End
+
+                for (x = -100; x < n; x += 0.001) { // Loop draw a tiny line for each of the pints in the f(x) function
+                  ctx.beginPath();
+                  // Draws a first set of points at [x, f(x)] based on the zoom value and center of graph
+                  ctx.moveTo(x * (10 * (+document.getElementById("zoom1").value)) + 1500, g(x) * (10 * (+document.getElementById("zoom1").value)) + 1500)
+                  // Draws of second set of points 1px away from the other one and connects them, thus creating a line
+                  ctx.lineTo(x * (10 * (+document.getElementById("zoom1").value)) + 1501, g(x) * (10 * (+document.getElementById("zoom1").value)) + 1501)
+                  ctx.lineWidth = 3;
+                  ctx.strokeStyle = "red"; // From random color function
+                  ctx.stroke();
+                  }
+                // End
+            }
+                // CLEAR CANVAS BUTTON
+                function clearcanvas1(){
+                    ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+                }
+            
+
+            </script>
+
+</body>
+</html>
